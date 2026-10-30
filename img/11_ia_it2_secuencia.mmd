@@ -1,20 +1,16 @@
-# Diagrama de Secuencia — Coffee Campus App
-## Escenario: Realizar Pedido y Procesar Pago
-
-```mermaid
 sequenceDiagram
-    actor Cliente
+    actor Cliente as Cliente
     participant UI as interfaz : AppUI
     participant CP as ctrlPedido : ControladorPedido
     participant CPago as ctrlPago : ControladorPago
-    participant Pedido as p : Pedido
-    participant Pasarela as Pasarela de Pago
+    participant Pasarela as pasarela : Pasarela de Pago
 
     Cliente ->> UI: seleccionarProductos()
     activate UI
     UI ->> CP: iniciarPedido(listaProductos)
     activate CP
-    CP ->> Pedido: new Pedido(listaProductos)
+    create participant Pedido as p : Pedido
+    CP ->> Pedido: create(listaProductos)
     activate Pedido
     Pedido -->> CP: pedidoCreado
     deactivate Pedido
@@ -38,4 +34,3 @@ sequenceDiagram
     deactivate CPago
     UI -->> Cliente: mostrarRecibo(idPedido)
     deactivate UI
-```

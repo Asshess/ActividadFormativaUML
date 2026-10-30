@@ -7,12 +7,12 @@ flowchart LR
     Pasarela["pasarela :\nPasarela de Pago"]
 
     Cliente -- "1: seleccionarProductos()\n5: confirmarYpagar()" --> UI
-    UI -- "2: iniciarPedido(lista)" --> CP
-    CP -- "3: crear(lista)" --> Pedido
+    UI -- "2: iniciarPedido(listaProductos)" --> CP
+    CP -- "3: create(listaProductos)" --> Pedido
     CP -- "4: mostrarTotal(total)" --> UI
-    UI -- "6: procesarPago(id)" --> CPago
-    CPago -- "7: autorizarTransaccion()" --> Pasarela
+    UI -- "6: procesarPago(idPedido, datosTarjeta)" --> CPago
+    CPago -- "7: autorizarTransaccion(monto, datosTarjeta)" --> Pasarela
     Pasarela -- "8: transaccionAprobada()" --> CPago
     CPago -- "9: actualizarEstado('Pagado')" --> Pedido
     CPago -- "10: pagoExitoso()" --> UI
-    UI -- "11: mostrarRecibo(id)" --> Cliente
+    UI -- "11: mostrarRecibo(idPedido)" --> Cliente

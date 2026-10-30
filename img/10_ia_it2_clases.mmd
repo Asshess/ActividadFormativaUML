@@ -1,11 +1,9 @@
-# Diagrama de Clases — Coffee Campus App
-
-```mermaid
 classDiagram
     class Usuario {
         - idUsuario : String
         - nombre : String
         - correo : String
+        + consultarMenu() void
         + iniciarSesion() boolean
         + cerrarSesion() void
     }
@@ -13,14 +11,18 @@ classDiagram
     class Cliente {
         - idMatricula : String
         - esEstudiante : boolean
-        + consultarMenu()
         + solicitarDescuento() boolean
     }
 
     class Barista {
         - idTurno : String
-        + verPedidosPendientes()
-        + actualizarEstadoPedido()
+        + verPedidosPendientes() void
+        + actualizarEstadoPedido() void
+    }
+
+    class Catalogo {
+        - version : String
+        + obtenerProductosDisponibles() List
     }
 
     class Producto {
@@ -36,7 +38,7 @@ classDiagram
         - fecha : Date
         - estado : String
         - total : double
-        + agregarDetalle()
+        + agregarDetalle() void
         + aplicarDescuento() void
         + calcularTotal() double
     }
@@ -51,14 +53,15 @@ classDiagram
         - idPago : String
         - monto : double
         - estado : String
-        + procesarTransaccion()
+        + procesarTransaccion() void
     }
 
     Usuario <|-- Cliente
     Usuario <|-- Barista
 
+    Catalogo "1" o-- "1..*" Producto : agrupa
     Cliente "1" --> "0..*" Pedido : realiza
+    Barista "1" --> "0..*" Pedido : prepara
     Pedido "1" *-- "1..*" DetallePedido : contiene
     DetallePedido "0..*" --> "1" Producto : refiere a
-    Pedido "1" --> "1" Pago : registra
-```
+    Pedido "1" --> "0..1" Pago : registra
