@@ -1,0 +1,37 @@
+@startuml
+actor Cliente
+boundary "interfaz : AppUI" as UI
+control "ctrlPedido : ControladorPedido" as CP
+control "ctrlPago : ControladorPago" as CPago
+entity "p : Pedido" as Pedido
+boundary "Pasarela de Pago" as Pasarela
+
+Cliente -> UI : seleccionarProductos()
+activate UI
+UI -> CP : iniciarPedido(listaProductos)
+activate CP
+CP -> Pedido ** : new Pedido(listaProductos)
+activate Pedido
+Pedido --> CP : pedidoCreado
+deactivate Pedido
+CP --> UI : mostrarTotal(total)
+deactivate CP
+
+Cliente -> UI : confirmarYpagar()
+UI -> CPago : procesarPago(idPedido, datosTarjeta)
+activate CPago
+CPago -> Pasarela : autorizarTransaccion(monto, datosTarjeta)
+activate Pasarela
+Pasarela --> CPago : transaccionAprobada
+deactivate Pasarela
+
+CPago -> Pedido : actualizarEstado("Pagado")
+activate Pedido
+Pedido --> CPago : estadoActualizado
+deactivate Pedido
+
+CPago --> UI : pagoExitoso()
+deactivate CPago
+UI --> Cliente : mostrarRecibo(idPedido)
+deactivate UI
+@enduml

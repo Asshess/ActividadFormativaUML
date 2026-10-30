@@ -1,0 +1,33 @@
+# Diagrama de Casos de Uso — Coffee Campus App
+
+```mermaid
+flowchart LR
+    Cliente(["👤 Cliente\n(Estudiante/Profesor)"])
+    Barista(["👤 Barista"])
+    Pasarela(["⚙️ Pasarela de Pago\n«Sistema Externo»"])
+    Matricula(["⚙️ Sistema de Matrícula\n«Sistema Externo»"])
+
+    subgraph CoffeeCampusApp["Coffee Campus App"]
+        UC1(["Consultar Menú"])
+        UC2(["Iniciar Sesión"])
+        UC3(["Crear Pedido"])
+        UC4(["Aplicar Descuento\nEstudiantil"])
+        UC5(["Validar Matrícula"])
+        UC6(["Procesar Pago"])
+        UC7(["Preparar Pedido"])
+        UC8(["Notificar Cliente"])
+    end
+
+    Cliente --> UC1
+    Cliente --> UC3
+    Cliente --> UC6
+
+    UC3 -->|"«include»"| UC2
+    UC4 -.->|"«extend»"| UC3
+    UC4 -->|"«include»"| UC5
+    UC5 --> Matricula
+
+    UC6 --> Pasarela
+    Barista --> UC7
+    UC7 -->|"«include»"| UC8
+```
