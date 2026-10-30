@@ -1,0 +1,31 @@
+sequenceDiagram
+    actor Cliente
+    participant AppUI as AppUI
+    participant ControladorPedido as ControladorPedido
+    participant Pedido as Pedido
+    participant ControladorPago as ControladorPago
+    participant PasarelaPago as Pasarela de Pago
+
+    Cliente->>AppUI: seleccionarProductos(listaProductos)
+    AppUI->>ControladorPedido: iniciarPedido(listaProductos)
+    ControladorPedido->>Pedido: new Pedido(listaProductos)
+    Pedido-->>ControladorPedido: pedidoCreado (idPedido, total)
+    ControladorPedido-->>AppUI: mostrarResumenPedido(idPedido, total)
+    AppUI-->>Cliente: Muestra resumen y total del pedido
+
+    Cliente->>AppUI: confirmarPedidoYPagar(idPedido, datosPago)
+    AppUI->>ControladorPago: procesarPago(idPedido, datosPago)
+    ControladorPago->>PasarelaPago: autorizarTransaccion(monto, datosPago)
+    PasarelaPago-->>ControladorPago: respuestaAutorizacion (aprobado/rechazado)
+
+    alt Pago Aprobado
+        ControladorPago->>Pedido: actualizarEstado("Pagado")
+        Pedido-->>ControladorPago: estadoActualizado
+        ControladorPago-->>AppUI: pagoExitoso(idPedido, recibo)
+        AppUI-->>Cliente: mostrarRecibo(recibo)
+    else Pago Rechazado
+        ControladorPago->>Pedido: actualizarEstado("Pendiente")
+        Pedido-->>ControladorPago: estadoActualizado
+        ControladorPago-->>AppUI: pagoRechazado(motivo)
+        AppUI-->>Cliente: notificarRechazo(motivo)
+    end

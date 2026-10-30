@@ -1,0 +1,77 @@
+classDiagram
+    class Usuario {
+        -idUsuario: int
+        -nombre: String
+        -email: String
+        -contrasena: String
+        +iniciarSesion(email, contrasena): boolean
+        +cerrarSesion(): void
+        +getIdUsuario(): int
+        +getNombre(): String
+    }
+    class Cliente {
+        -idMatricula: String
+        -esEstudiante: boolean
+        -historialPedidos: List~Pedido~
+        +consultarMenu(): List~Producto~
+        +crearPedido(productos: List~Producto~): Pedido
+        +solicitarDescuento(): boolean
+        +verHistorialPedidos(): List~Pedido~
+    }
+    class Barista {
+        -idEmpleado: String
+        -turno: String
+        +verPedidosPendientes(): List~Pedido~
+        +actualizarEstadoPedido(idPedido: String, nuevoEstado: String): void
+        +marcarListoParaEntrega(idPedido: String): void
+    }
+    class Producto {
+        -idProducto: String
+        -nombre: String
+        -descripcion: String
+        -precio: double
+        -disponible: boolean
+        -categoria: String
+        +getPrecio(): double
+        +isDisponible(): boolean
+        +getNombre(): String
+    }
+    class Pedido {
+        -idPedido: String
+        -fechaHora: DateTime
+        -estado: String
+        -totalSinDescuento: double
+        -totalConDescuento: double
+        -descuentoAplicado: boolean
+        +agregarDetalle(producto: Producto, cantidad: int): void
+        +aplicarDescuento(porcentaje: double): void
+        +calcularTotal(): double
+        +getEstado(): String
+        +setEstado(nuevoEstado: String): void
+    }
+    class DetallePedido {
+        -idDetalle: String
+        -cantidad: int
+        -precioUnitario: double
+        -subtotal: double
+        +calcularSubtotal(): double
+        +getCantidad(): int
+        +getPrecioUnitario(): double
+    }
+    class Pago {
+        -idPago: String
+        -monto: double
+        -metodoPago: String
+        -estado: String
+        -fechaTransaccion: DateTime
+        +procesarTransaccion(): boolean
+        +getEstado(): String
+        +getMonto(): double
+    }
+
+    Usuario <|-- Cliente
+    Usuario <|-- Barista
+    Cliente "1" --> "0..*" Pedido : realiza
+    Pedido "1" *-- "1..*" DetallePedido : contiene
+    DetallePedido "0..*" --> "1" Producto : referencia
+    Pedido "1" --> "1" Pago : genera

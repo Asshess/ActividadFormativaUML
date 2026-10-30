@@ -1,0 +1,18 @@
+flowchart LR
+    Cliente(["👤 Cliente"])
+    UI["interfaz : AppUI"]
+    CP["ctrlPedido :\nControladorPedido"]
+    CPago["ctrlPago :\nControladorPago"]
+    Pedido["p : Pedido"]
+    Pasarela["pasarela :\nPasarela de Pago"]
+
+    Cliente -- "1: seleccionarProductos()\n5: confirmarYpagar()" --> UI
+    UI -- "2: iniciarPedido(lista)" --> CP
+    CP -- "3: crear(lista)" --> Pedido
+    CP -- "4: mostrarTotal(total)" --> UI
+    UI -- "6: procesarPago(id)" --> CPago
+    CPago -- "7: autorizarTransaccion()" --> Pasarela
+    Pasarela -- "8: transaccionAprobada()" --> CPago
+    CPago -- "9: actualizarEstado('Pagado')" --> Pedido
+    CPago -- "10: pagoExitoso()" --> UI
+    UI -- "11: mostrarRecibo(id)" --> Cliente

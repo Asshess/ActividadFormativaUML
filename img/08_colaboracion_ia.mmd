@@ -1,0 +1,22 @@
+flowchart TD
+    Cliente(["Cliente"])
+    AppUI["AppUI"]
+    ControladorPedido["ControladorPedido"]
+    Pedido["Pedido"]
+    ControladorPago["ControladorPago"]
+    PasarelaPago["Pasarela de Pago"]
+
+    Cliente -->|"1: seleccionarProductos(listaProductos)"| AppUI
+    AppUI -->|"2: iniciarPedido(listaProductos)"| ControladorPedido
+    ControladorPedido -->|"3: new Pedido(listaProductos)"| Pedido
+    Pedido -->|"4: pedidoCreado(idPedido, total)"| ControladorPedido
+    ControladorPedido -->|"5: mostrarResumenPedido(idPedido, total)"| AppUI
+    AppUI -->|"6: Muestra resumen"| Cliente
+    Cliente -->|"7: confirmarPedidoYPagar(idPedido, datosPago)"| AppUI
+    AppUI -->|"8: procesarPago(idPedido, datosPago)"| ControladorPago
+    ControladorPago -->|"9: autorizarTransaccion(monto, datosPago)"| PasarelaPago
+    PasarelaPago -->|"10: respuestaAutorizacion(aprobado)"| ControladorPago
+    ControladorPago -->|"11: actualizarEstado('Pagado')"| Pedido
+    Pedido -->|"12: estadoActualizado"| ControladorPago
+    ControladorPago -->|"13: pagoExitoso(recibo)"| AppUI
+    AppUI -->|"14: mostrarRecibo(recibo)"| Cliente
